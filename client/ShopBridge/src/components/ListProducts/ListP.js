@@ -16,8 +16,10 @@ const Item = ({pname, OnPressed, price, deletItem}) => {
     <TouchableOpacity onPress={OnPressed}>
       <View style={styles.item}>
         <Text style={styles.title}>{pname}</Text>
-        <Text style={styles.price}>{price}</Text>
-        <Icon style={styles.delIcon} name="trash" onPress={deletItem} />
+        <View style={styles.buttonItem}>
+          <Text style={styles.price}>{price}</Text>
+          <Icon style={styles.delIcon} name="trash" onPress={deletItem} />
+        </View>
       </View>
     </TouchableOpacity>
   );
@@ -62,6 +64,9 @@ export default function ListP({navigation}) {
         pname={item.pname}
         price={item.price}
         OnPressed={() => {
+          console.log('====================================');
+          console.log(item.pid);
+          console.log('====================================');
           if (item.pid) {
             navigation.navigate('Product Details', item.pid);
           }
@@ -105,9 +110,14 @@ const styles = StyleSheet.create({
     fontSize: 20,
   },
   delIcon: {
-    // size: 30,
-    fontSize: 30,
+    fontSize: 25,
     color: 'black',
+    marginLeft: 320,
+    position: 'absolute',
+  },
+  buttonItem: {
+    flexDirection: 'row',
     position: 'relative',
+    flexWrap: 'wrap',
   },
 });

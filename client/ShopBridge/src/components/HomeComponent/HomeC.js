@@ -9,10 +9,6 @@ import {
   View,
 } from 'react-native';
 import Applogo from '../../Assets/logo.png';
-import AddProduct from '../AddProducts/AddProduct';
-import ListP from '../ListProducts/ListP';
-import {NavigationContainer} from '@react-navigation/native';
-import {createStackNavigator} from '@react-navigation/stack';
 
 const Separator = () => <View style={styles.separator} />;
 // const {navigate} = this.props.navigation;

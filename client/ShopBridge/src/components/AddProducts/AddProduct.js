@@ -1,5 +1,13 @@
 import React, {useState, useEffect} from 'react';
-import {View, Text, TextInput, Button, ActivityIndicator} from 'react-native';
+import {
+  View,
+  Text,
+  TextInput,
+  Button,
+  ActivityIndicator,
+  StyleSheet,
+  StatusBar,
+} from 'react-native';
 import apiURL from '../../config/serverConfig';
 
 export default function AddProduct({navigation}) {
@@ -24,9 +32,26 @@ export default function AddProduct({navigation}) {
       .then((response) => response.json())
       .then((data) => {
         // setData(data.response);
-        console.log(data.status);
+        console.log(data);
 
-        navigation.navigate('List All Item');
+        if (data.status === true) {
+          navigation.navigate('List All Item');
+        } else if (
+          data.status === false &&
+          data.error == 'Record already exist'
+        ) {
+          alert('Record already exists please use unique product Id');
+        } else if (
+          data.status === false &&
+          data.error._message == 'products validation failed'
+        ) {
+          alert('Please use number for price');
+        } else if (
+          data.status === false &&
+          data.error == 'Unable to retrive data!!!!!'
+        ) {
+          alert('Please use number for product id ');
+        }
       })
       .catch((error) => console.log(error));
 
@@ -34,44 +59,47 @@ export default function AddProduct({navigation}) {
   };
 
   return (
-    <View data-test="addProduct">
-      <Text>Please fill below Product details</Text>
+    <View data-test="addProduct" style={styles.item}>
+      <Text style={styles.headFont}>Please fill below Product details</Text>
       <ActivityIndicator animating={true} />
-      <TextInput
-        style={{height: 40, borderColor: 'gray', borderWidth: 1}}
-        value={pid}
-        onChangeText={(e) => {
-          setPid(e);
-        }}
-        placeholder="Add product ID"
-      />
-      <TextInput
-        style={{height: 40, borderColor: 'gray', borderWidth: 1}}
-        type="text"
-        value={pname}
-        onChangeText={(e) => {
-          setPname(e);
-        }}
-        placeholder="Add product name"
-      />
-      <TextInput
-        style={{height: 80, borderColor: 'gray', borderWidth: 1}}
-        value={pdescription}
-        onChangeText={(e) => {
-          setPdescription(e);
-        }}
-        editable
-        maxLength={40}
-        placeholder="Description"
-      />
-      <TextInput
-        style={{height: 40, borderColor: 'gray', borderWidth: 1}}
-        value={price}
-        onChangeText={(e) => {
-          setPrice(e);
-        }}
-        placeholder="Price"
-      />
+      <View style={styles.mainInput}>
+        <TextInput
+          style={styles.inputBox}
+          value={pid}
+          onChangeText={(e) => {
+            setPid(e);
+          }}
+          placeholder="Add product ID"
+        />
+        <TextInput
+          style={styles.inputBox}
+          type="text"
+          value={pname}
+          onChangeText={(e) => {
+            setPname(e);
+          }}
+          placeholder="Add product name"
+        />
+        <TextInput
+          style={styles.inputBox}
+          value={pdescription}
+          onChangeText={(e) => {
+            setPdescription(e);
+          }}
+          editable
+          maxLength={40}
+          placeholder="Description"
+        />
+
+        <TextInput
+          style={styles.inputBox}
+          value={price}
+          onChangeText={(e) => {
+            setPrice(e);
+          }}
+          placeholder="Price"
+        />
+      </View>
       <Button
         data-test="buttonRender"
         title="Submit"
@@ -82,3 +110,34 @@ export default function AddProduct({navigation}) {
     </View>
   );
 }
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    marginTop: StatusBar.currentHeight || 0,
+  },
+  item: {
+    backgroundColor: '#f9c2ff',
+    padding: 20,
+    marginVertical: 8,
+    marginHorizontal: 8,
+  },
+
+  headFont: {
+    backgroundColor: '#f9c2ff',
+    padding: 20,
+    marginVertical: 8,
+    marginHorizontal: 8,
+    fontSize: 20,
+  },
+
+  inputBox: {
+    height: 40,
+    borderColor: 'gray',
+    borderWidth: 1,
+  },
+
+  mainInput: {
+    flexDirection: 'column',
+    justifyContent: 'space-around',
+  },
+});
